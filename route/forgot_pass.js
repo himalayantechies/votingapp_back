@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 
-const controller = require('../controller/forgotPass');
+const controller = require('../controller/forgot_pass');
 const validatorErr = require('../middleware/validatorErr');
 const validator = require('../middleware/validator');
 

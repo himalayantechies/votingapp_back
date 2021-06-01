@@ -134,3 +134,44 @@ module.exports.model_step_two = [
         .not().isEmpty().withMessage('Model id is required')
 
 ];
+
+module.exports.change_profile = [
+
+    body('first_name')
+        .trim()
+        .not().isEmpty().withMessage('First name is required'),
+
+    body('last_name')
+        .trim()
+        .not().isEmpty().withMessage('Last name is required'),
+
+    body('email')
+        .trim()
+        .not().isEmpty().withMessage('E-mail is required')
+        .isEmail().withMessage('Please provide a valid email address'),
+
+];
+
+module.exports.change_password = [
+
+    body('old_password')
+        .trim()
+        .not().isEmpty().withMessage('Old password is required'),
+
+    body('new_password')
+        .trim()
+        .not().isEmpty().withMessage('New password is required'),
+
+];
+
+module.exports.advertisement_add = [
+
+    body('name')
+        .trim()
+        .not().isEmpty().withMessage('Old password is required'),
+
+    body('coin_count')
+        .trim()
+        .not().isEmpty().withMessage('New password is required'),
+
+];

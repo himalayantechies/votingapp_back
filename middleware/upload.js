@@ -27,6 +27,18 @@ const storage_model_video = multer.diskStorage({
         done(null, file.fieldname + '-' + moment().format('DD.MM.YYYY-HH.mm.ss.SSS') + path.extname(file.originalname));
     }
 });
+const storage_advertisement_video = multer.diskStorage({
+    destination(req, file, done) {
+        if (!fs.existsSync(`uploads/advertisement/`)) {
+            fs.mkdirSync(`uploads/advertisement/`, {recursive: true});
+        }
+        done(null, `uploads/advertisement/`);
+    },
+
+    filename(req, file, done) {
+        done(null, file.fieldname + '-' + moment().format('DD.MM.YYYY-HH.mm.ss.SSS') + path.extname(file.originalname));
+    }
+});
 
 const fileImg = (req, file, done) => {
     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
@@ -49,8 +61,10 @@ const limitsPhoto = {fileSize: 1024 * 1024  * 5};
 
 const model_img = multer({storage: storage_model_img, fileImg, limitsPhoto});
 const model_video = multer({storage: storage_model_video, fileVideo, limitsVideo});
+const advertisement_video = multer({storage: storage_advertisement_video, fileVideo, limitsVideo});
 
 module.exports = {
     model_img,
-    model_video
+    model_video,
+    advertisement_video
 }

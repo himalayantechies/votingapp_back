@@ -47,7 +47,7 @@ module.exports = {
             return res.status(411).json({err: 'Customer by this email already exists'})
         }
         let hashedPassword = bcrypt.hashSync(password, 8);
-        let customer = new db.models.customer({first_name, last_name, email, password: hashedPassword})
+        let customer = new db.models.customer({first_name, last_name, email, password: hashedPassword, coin: 0})
         let customer_create = await customer.save();
         res.status(200).json({message: 'Customer create'})
     },

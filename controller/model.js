@@ -66,6 +66,7 @@ module.exports = {
         let videos = []
         let video_list = await req.files.map((data, index) => {
             videos.push({
+                model_nepal_id: model_id,
                 description: video_description_new[index],
                 path: data.path
             })
@@ -106,10 +107,10 @@ module.exports = {
         if(!customer){
             return res.status(404).json({message: 'Customer not found'})
         }
-        let models = await db.models.model_nepal.find({top: {$gt: 0, $lte: 13}})
-            .catch(err => {
-                return res.status(500).json({err: 'Please try again later'})
-            })
+        let models = await db.models.model_nepal.aggregate([
+            { $match: {top: {$gt: 0, $lte: 13}} },
+            { $lookup: { from: "model_likes", localField: "_id", foreignField: "model_nepal_id", as: "like"  } },
+        ])
         res.status(200).json({models: models})
     },
 
@@ -121,10 +122,10 @@ module.exports = {
         if(!customer){
             return res.status(404).json({message: 'Customer not found'})
         }
-        let models = await db.models.model_nepal.find({top: {$gt: 13}})
-            .catch(err => {
-                return res.status(500).json({err: 'Please try again later'})
-            })
+        let models = await db.models.model_nepal.aggregate([
+            { $match: {top: {$gt: 13}} },
+            { $lookup: { from: "model_likes", localField: "_id", foreignField: "model_nepal_id", as: "like"  } },
+        ])
         res.status(200).json({models: models})
     },
 
@@ -136,25 +137,11 @@ module.exports = {
         if(!customer){
             return res.status(404).json({message: 'Customer not found'})
         }
-
-        /*let result = await Winner.aggregate([
-            { $match: { id: "301" } },
-            { $lookup: { from: "namelists", localField: "winner", foreignField: "id", as: "winner"  } },
-            { $unwind: "$winner" },
-            { $replaceRoot: { newRoot: "$winner" } }
-        ]);*/
-
         let models = await db.models.model_nepal.aggregate([
             { $match: { _id: db.Mongoose.Types.ObjectId(req.params.id) } },
             { $lookup: { from: "model_nepal_imgs", localField: "_id", foreignField: "model_nepal_id", as: "gallery"  } },
-        ]).exec((err, locations) => {
-            if (err) throw err;
-            res.status(200).json({models: locations})
-        })
-        let model_nepal_img = await db.models.model_nepal_img.find({model_nepal_id: req.params.id})
-            .catch(err => {
-                return res.status(500).json({err: 'Please try again later'})
-            })
-        console.log(model_nepal_img);
+            { $lookup: { from: "model_nepal_videos", localField: "_id", foreignField: "model_nepal_id", as: "video"  } },
+        ])
+        res.status(200).json({models: models})
     }
 }

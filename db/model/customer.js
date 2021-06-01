@@ -14,7 +14,9 @@ module.exports = (mongoose) => {
             select: false
         },
         code: String,
-        languages: String
+        languages: String,
+        coin: String,
+        admin: String
     }, {versionKey: null, timestamps: true,});
 
     let Customer = mongoose.model('Customer', CustomerSchema);
